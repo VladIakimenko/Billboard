@@ -38,6 +38,7 @@ The application offers a unique feature for setting up the environment for a qui
 - Create Test Users: Run 'python manage.py create_test_users'. This command will automatically create several test users and an admin user, saving their authentication tokens to the http-client.env.json file for use with HTTP clients.
 - Connect Virtual Environment for your http-client: In your HTTP client, connect to the 'dev' virtual environment from the http-client.env.json file. The method to do this may vary depending on your client. Generally, this can be done through a setting or command such as @env http-client.env.json.
 - Maintain Request Order: When running the requests in request-examples.http, it's important to maintain the order of execution. Some requests depend on the state of the application after previous requests.  
+
 Throttling and Constraints Checks: The request-examples.http file includes requests designed to check rate limiting (throttling) and constraints on the number of 'OPEN' advertisements. Please follow the comments in the file to execute these tests correctly.
 
 Note: With these steps, there's no need to manually create users through the Django admin interface, making the setup process smoother and easier to automate. This unique setup feature allows for robust, thorough testing of the application's functionality, ensuring the quality and reliability of your application.
