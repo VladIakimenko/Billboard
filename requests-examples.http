@@ -1,0 +1,226 @@
+# TO GET TOKEN VARS SAVED IN HTTP-CLIENT ENV, EXECUTE python "manage.py create_test_users"
+
+# creating advertisements
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "title": "Selling: IKEA Wardrobe",
+  "description": "Half assembled"
+}
+###
+
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token2}}
+
+{
+  "title": "Selling: STIHL Chainsaw",
+  "description": "Stained with blood"
+}
+###
+
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token3}}
+
+{
+  "title": "Selling: LADA Kalina",
+  "description": "Pickup only"
+}
+###
+
+# an attempt to create an adverisement by a non-authenticated user
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+
+{
+  "title": "Buying: Typewriter",
+  "description": "Will pay with a checkbook"
+}
+###
+
+# retrieving advertisements
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+###
+
+# changing own advertisement
+PATCH {{baseUrl}}/advertisements/1/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "status": "CLOSED"
+}
+###
+
+# an attempt to change some one else's advertisement
+PATCH {{baseUrl}}/advertisements/2/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "status": "CLOSED"
+}
+###
+
+# an attempt to change an adv without authentication
+PATCH {{baseUrl}}/advertisements/2/
+Content-Type: application/json
+
+{
+  "status": "CLOSED"
+}
+###
+
+# deleting own advertisement
+DELETE {{baseUrl}}/advertisements/3/
+Content-Type: application/json
+Authorization: Token {{token3}}
+###
+
+# an attempt to delete some one else's advertisement
+DELETE {{baseUrl}}/advertisements/2/
+Content-Type: application/json
+Authorization: Token {{token1}}
+###
+
+# an attempt to delete an adv without authentication
+DELETE {{baseUrl}}/advertisements/2/
+Content-Type: application/json
+###
+
+# filtration by creator
+GET {{baseUrl}}/advertisements/?creator=2
+Content-Type: application/json
+###
+
+# filtration by status
+GET {{baseUrl}}/advertisements/?status=CLOSED
+Content-Type: application/json
+###
+
+# filtration by date (success)
+GET {{baseUrl}}/advertisements/?created_at_after=2023-01-01
+Content-Type: application/json
+###
+
+# filtration by date (failure)
+GET {{baseUrl}}/advertisements/?created_at_before=2023-01-01
+Content-Type: application/json
+###
+
+# filtration by date (interval)
+GET {{baseUrl}}/advertisements/?created_at_after=2023-01-01&created_at_before=2024-01-01
+Content-Type: application/json
+###
+
+# an advertisement modification by admin (not owned)
+PATCH {{baseUrl}}/advertisements/2/
+Content-Type: application/json
+Authorization: Token {{adminToken}}
+
+{
+  "status": "CLOSED"
+}
+###
+
+# an advertisement removal by admin (not owned)
+DELETE {{baseUrl}}/advertisements/2/
+Content-Type: application/json
+Authorization: Token {{adminToken}}
+###
+
+# adding an advertisement to fovorites
+POST {{baseUrl}}/favorites/?adv=1
+Content-Type: application/json
+Authorization: Token {{token2}}
+###
+
+POST {{baseUrl}}/favorites/?adv=1
+Content-Type: application/json
+Authorization: Token {{token1}}
+###
+
+# an attempt to add a non-existing adv to favorites
+POST {{baseUrl}}/favorites/?adv=2
+Content-Type: application/json
+Authorization: Token {{token2}}
+###
+
+# retrieving favorites
+GET {{baseUrl}}/favorites/
+Content-Type: application/json
+Authorization: Token {{token2}}
+###
+
+# retrieving favorites (user did not add any favorites)
+GET {{baseUrl}}/favorites/
+Content-Type: application/json
+Authorization: Token {{token3}}
+###
+
+# retrieving favorites (not authenticated)
+GET {{baseUrl}}/favorites/
+Content-Type: application/json
+###
+
+# retrieving favorites (admin sight)
+GET {{baseUrl}}/favorites/
+Content-Type: application/json
+Authorization: Token {{adminToken}}
+###
+
+# creating a draft advertisement
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "title": "Will create a website using Django.",
+  "description": "But that's not certain...",
+  "draft": true
+}
+###
+
+# retrieving advs by a user, who has created the draft (must be in)
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token1}}
+###
+
+# retrieving advs by a user, who hasn't created the draft (must not be in)
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token2}}
+###
+
+# retrieving advs by admin (see's drafts too)
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{adminToken}}
+###
+
+# retrieving advs by anonimous user (can't see drafts)
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+###
+
+# registering a new user
+POST {{baseUrl}}/register/
+Content-Type: application/json
+
+{
+  "username": "master_jackie",
+  "password": "SecurePassword123",
+  "first_name": "Jackie",
+  "last_name": "Chan",
+  "is_staff": false,
+  "is_superuser": false
+}
+###
+
+# SEND 11 POST REQUESTS IN A ROW TO CHECK THE 10 'OPEN' ADV's CONSTRAINT
+# SEND 11 NON-AUTHENTICATED(no token) OR 21 AUTHENTICATED REQUESTS PER MINUTE TO CHECK THE THROTTLING
