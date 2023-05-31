@@ -31,7 +31,6 @@ class RegisterView(CreateAPIView):
 
 class AdvertisementViewSet(ModelViewSet):
     serializer_class = AdvertisementSerializer
-    filterset_fields = ['creator', 'created_at', 'status']
     filterset_class = AdvertisementFilter
 
     def get_queryset(self):
