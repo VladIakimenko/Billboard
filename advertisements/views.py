@@ -37,7 +37,7 @@ class AdvertisementViewSet(ModelViewSet):
         user = self.request.user
         if user.is_staff:
             queryset = Advertisement.objects.all()
-        elif isinstance(user, AnonymousUser):
+        elif user.is_anonymous:
             queryset = Advertisement.objects.filter(draft=False)
         else:
             queryset = Advertisement.objects.filter(
